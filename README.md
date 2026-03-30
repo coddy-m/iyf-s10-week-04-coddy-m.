@@ -1,4 +1,4 @@
-# Week {04}: {Javascript Fundamentals}
+# Week 04: Javascript Fundamentals
 
 ## Author
 - **Name:** Michelle
