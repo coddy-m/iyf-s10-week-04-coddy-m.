@@ -6,7 +6,7 @@
 - **Date:** March 2026
 
 ## Project Description
-Master the core concepts of JavaScript: variables, data types, functions, control flow, arrays, and objects. Built an interactive calculator and student grade tracker to apply these fundamentals.
+- Master the core concepts of JavaScript: variables, data types, functions, control flow, arrays, and objects. Built an interactive calculator and student grade tracker to apply these fundamentals.
 
 ## Technologies Used
 - HTML5
@@ -41,6 +41,7 @@ Master the core concepts of JavaScript: variables, data types, functions, contro
 ### Check if Node.js is installed
 - node --version
 - npm --version
+
 - If not installed, download from: https://nodejs.org
 - Or use a version manager:
 - Windows: choco install nodejs-lts
