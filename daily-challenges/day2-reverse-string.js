@@ -1,47 +1,32 @@
-// Day 2: Reverse a String 🟢
-// Input: "hello" → Output: "olleh"
-
-console.log("\n=== 🔄 Day 2: Reverse String ===\n");
+/**
+ * Day 2: Reverse a String
+ * Multiple approaches demonstrated
+ */
 
 // Approach 1: Built-in methods (cleanest)
-function reverseString1(str) {
-    return str.split("").reverse().join("");
-}
+const reverse1 = str => str.split('').reverse().join('');
 
-// Approach 2: For loop (manual)
-function reverseString2(str) {
-    let reversed = "";
+// Approach 2: For loop
+function reverse2(str) {
+    let result = '';
     for (let i = str.length - 1; i >= 0; i--) {
-        reversed += str[i];
+        result += str[i];
     }
-    return reversed;
+    return result;
 }
 
-// Approach 3: For...of loop
-function reverseString3(str) {
-    let reversed = "";
-    for (const char of str) {
-        reversed = char + reversed;
-    }
-    return reversed;
+// Approach 3: Reduce
+const reverse3 = str => [...str].reduce((rev, char) => char + rev, '');
+
+// Test
+console.log("🎯 Day 2: Reverse String\n");
+const test = "hello";
+console.log(`  Input: "${test}"`);
+console.log(`  Method 1 (split/reverse/join): "${reverse1(test)}"`);
+console.log(`  Method 2 (for loop): "${reverse2(test)}"`);
+console.log(`  Method 3 (reduce): "${reverse3(test)}"`);
+
+// Export
+if (typeof module !== 'undefined') {
+    module.exports = { reverse1, reverse2, reverse3 };
 }
-
-// Approach 4: reduce (functional)
-function reverseString4(str) {
-    return str.split("").reduce((reversed, char) => char + reversed, "");
-}
-
-// Test all approaches
-const testStr = "hello";
-console.log(`Original: "${testStr}"`);
-console.log(`Approach 1 (split/reverse/join): "${reverseString1(testStr)}"`);
-console.log(`Approach 2 (for loop): "${reverseString2(testStr)}"`);
-console.log(`Approach 3 (for...of): "${reverseString3(testStr)}"`);
-console.log(`Approach 4 (reduce): "${reverseString4(testStr)}"`);
-
-// Edge cases
-console.log(`\n🧪 Edge Cases:`);
-console.log(`Empty string: "${reverseString1("")}"`);
-console.log(`Single char: "${reverseString1("a")}"`);
-console.log(`Palindrome: "${reverseString1("racecar")}"`);
-console.log(`With spaces: "${reverseString1("hello world")}"`);

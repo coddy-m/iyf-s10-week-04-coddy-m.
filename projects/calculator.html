@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>🧮 Interactive Calculator</title>
+    <style>
+        body { font-family: system-ui; max-width: 500px; margin: 2rem auto; padding: 1rem; }
+        .calc { background: #f1f5f9; padding: 1.5rem; border-radius: 12px; }
+        input, select, button { width: 100%; padding: 0.75rem; margin: 0.5rem 0; border: 1px solid #cbd5e1; border-radius: 6px; }
+        button { background: #2563eb; color: white; border: none; cursor: pointer; font-weight: 600; }
+        button:hover { background: #1d4ed8; }
+        #result { margin-top: 1rem; padding: 1rem; background: white; border-radius: 6px; min-height: 3rem; font-weight: 500; }
+        .error { color: #dc2626; }
+    </style>
+</head>
+<body>
+    <h1>🧮 Calculator</h1>
+    <div class="calc">
+        <input type="number" id="num1" placeholder="First number" step="any">
+        <select id="operator">
+            <option value="+">+ Add</option>
+            <option value="-">− Subtract</option>
+            <option value="*">×</option>
+            <option value="/">÷ Divide</option>
+            <option value="%">% Modulus</option>
+            <option value="**">^ Power</option>
+        </select>
+        <input type="number" id="num2" placeholder="Second number" step="any">
+        <button onclick="doCalculate()">Calculate</button>
+        <div id="result">Enter values and click Calculate</div>
+    </div>
+
+    <script src="calculator.js"></script>
+    <script>
+        function doCalculate() {
+            const num1 = parseFloat(document.getElementById('num1').value);
+            const operator = document.getElementById('operator').value;
+            const num2 = parseFloat(document.getElementById('num2').value);
+            const resultEl = document.getElementById('result');
+            
+            if (isNaN(num1) || isNaN(num2)) {
+                resultEl.innerHTML = '<span class="error">⚠️ Please enter valid numbers</span>';
+                return;
+            }
+            
+            const result = calculate(num1, operator, num2);
+            resultEl.textContent = typeof result === 'string' && result.startsWith('❌') 
+                ? result 
+                : `✅ Result: ${result}`;
+            if (typeof result === 'string' && result.startsWith('❌')) {
+                resultEl.classList.add('error');
+            } else {
+                resultEl.classList.remove('error');
+            }
+        }
+        
+        // Allow Enter key
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('keypress', e => { if (e.key === 'Enter') doCalculate(); });
+        });
+    </script>
+</body>
+</html>

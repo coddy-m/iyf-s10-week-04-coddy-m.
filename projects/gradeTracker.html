@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>📊 Grade Tracker</title>
+    <style>
+        body { font-family: system-ui; max-width: 900px; margin: 0 auto; padding: 1rem; background: #f8fafc; }
+        .container { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .card { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        input, select, button { width: 100%; padding: 0.5rem; margin: 0.25rem 0; border: 1px solid #cbd5e1; border-radius: 6px; }
+        button { background: #2563eb; color: white; border: none; cursor: pointer; font-weight: 500; }
+        button:hover { background: #1d4ed8; }
+        button.secondary { background: #64748b; }
+        button.secondary:hover { background: #475569; }
+        #report { white-space: pre-wrap; font-family: monospace; background: #f1f5f9; padding: 1rem; border-radius: 6px; min-height: 200px; }
+        .student-list { max-height: 200px; overflow-y: auto; }
+        .student-item { padding: 0.5rem; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; }
+        .grade-A { color: #16a34a; } .grade-B { color: #22c55e; }
+        .grade-C { color: #eab308; } .grade-D { color: #f97316; } .grade-F { color: #dc2626; }
+    </style>
+</head>
+<body>
+    <h1>📊 Student Grade Tracker</h1>
+    
+    <div class="container">
+        <div class="card">
+            <h3>➕ Add Student</h3>
+            <input type="text" id="studentName" placeholder="Student name">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.5rem">
+                <input type="number" id="mathGrade" placeholder="Math" min="0" max="100">
+                <input type="number" id="englishGrade" placeholder="English" min="0" max="100">
+                <input type="number" id="scienceGrade" placeholder="Science" min="0" max="100">
+                <input type="number" id="historyGrade" placeholder="History" min="0" max="100">
+            </div>
+            <button onclick="addStudent()">Add Student</button>
+        </div>
+        
+        <div class="card">
+            <h3>🔍 Find Student</h3>
+            <input type="text" id="searchName" placeholder="Enter name">
+            <button onclick="showReport()">Generate Report</button>
+            <button class="secondary" onclick="showStats()">Class Statistics</button>
+        </div>
+    </div>
+    
+    <div class="card" style="margin-top:1rem">
+        <h3>📋 Report Card</h3>
+        <pre id="report">Select a student to view report</pre>
+    </div>
+    
+    <div class="card" style="margin-top:1rem">
+        <h3>👥 All Students</h3>
+        <div id="studentList" class="student-list"></div>
+    </div>
+
+    <script src="gradeTracker.js"></script>
+    <script>
+        // Initialize with demo data
+        gradeTracker.addStudent("Alice", { math: 95, english: 88, science: 92 });
+        gradeTracker.addStudent("Bob", { math: 72, english: 85, science: 78 });
+        gradeTracker.addStudent("Charlie", { math: 60, english: 65, science: 58 });
+        updateStudentList();
+        
+        function addStudent() {
+            const name = document.getElementById('studentName').value.trim();
+            if (!name) return alert('Enter a name');
+            
+            const grades = {};
+            const subjects = ['math', 'english', 'science', 'history'];
+            subjects.forEach(subj => {
+                const val = document.getElementById(subj + 'Grade').value;
+                if (val) grades[subj] = parseFloat(val);
+            });
+            
+            if (Object.keys(grades).length === 0) return alert('Add at least one grade');
+            
+            gradeTracker.addStudent(name, grades);
+            updateStudentList();
+            // Clear form
+            document.getElementById('studentName').value = '';
+            subjects.forEach(s => document.getElementById(s+'Grade').value = '');
+        }
+        
+        function showReport() {
+            const name = document.getElementById('searchName').value.trim();
+            document.getElementById('report').textContent = gradeTracker.generateReportCard(name);
+        }
+        
+        function showStats() {
+            let stats = `📈 CLASS STATISTICS\n${'═'.repeat(40)}\n`;
+            const subjects = ['math', 'english', 'science', 'history'];
+            subjects.forEach(subj => {
+                const avg = gradeTracker.getSubjectAverage(subj);
+                if (avg !== null) {
+                    stats += `${subj.padEnd(12)}: ${avg.toFixed(2)} (${gradeTracker.getLetterGrade(avg)})\n`;
+                }
+            });
+            const top = gradeTracker.getTopStudent();
+            const struggling = gradeTracker.getStrugglingStudents();
+            stats += `\n🏆 Top Student: ${top?.name || 'N/A'}\n`;
+            stats += `⚠️  Need Help: ${struggling.map(s=>s.name).join(', ') || 'None'}\n`;
+            document.getElementById('report').textContent = stats;
+        }
+        
+        function updateStudentList() {
+            const list = document.getElementById('studentList');
+            list.innerHTML = gradeTracker.students.map(s => {
+                const avg = gradeTracker.getStudentAverage(s.name);
+                const letter = gradeTracker.getLetterGrade(avg);
+                return `<div class="student-item">
+                    <span>${s.name}</span>
+                    <span class="grade-${letter}">${avg?.toFixed(1) || 'N/A'} (${letter})</span>
+                </div>`;
+            }).join('') || '<p style="color:#64748b">No students added yet</p>';
+        }
+    </script>
+</body>
+</html>
